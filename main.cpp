@@ -9,6 +9,7 @@
 #include"Vector.h"
 #include <ctime>
 #include <iostream>
+#include "List.h"
 int main(int argc, char** argv) {
 	std::clock_t t_start, t_end;
 	t_start = std::clock();
