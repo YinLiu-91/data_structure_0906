@@ -97,6 +97,98 @@ ListNodePosi(T) List<T>::find(T const& e, int n, ListNodePosi(T) p)const {
 	return nullptr;
 }
 
-//
+//插入
+template<typename T>
+ListNodePosi(T) List<T>::insertAsFirst(T const& e)
+{
+	++_size; return header->insertAsSucc(e);
+}
+
+template<typename T>
+ListNodePosi(T) List<T>::insertAsLast(T const& e)
+{
+	++_size; return trailer->insertAsPred(e);
+}
+
+template<typename T	> ListNodePosi(T) List<T>::insertA(ListNodePosi(T)p, T const& e)
+{
+	_size++; return p->insertAsSucc(e);
+}
+template<typename T> ListNodePosi(T) List<T>::insertB(ListNodePosi(T) p, T const& e)
+{
+	_size++; return p->insertAsPred(e);
+}
+template<typename T>
+ListNodePosi(T) ListNode<T>::insertAsPred(T const& e) {
+	ListNodePosi(T) x = new ListNode(e, pred, this);
+	pred->succ = x; pred = x;//设置正向链
+	return x;
+}
+template<typename T>
+ListNodePosi(T) ListNode<T>::insertAsSucc(T const& e)
+{
+	ListNodePosi(T) x = new ListNode(e, this, succ);
+	succ->pred = x; succ = x;//设置逆向链接
+	return x;
+}
+
+//p74
+template<typename T>
+void List<T>::copyNodes(ListNodePosi(T) p, int n)
+{
+	init();
+	while (n--) { insertAsLast(p->data); p = p->succ; }
+}
+
+template<typename T>
+List<T>::List(ListNodePosi(T) p, int n) { copyNodes(p, n); }
+template<typename T>//拷贝构造
+List<T>::List(List<T>const& L) { copyNodes(L.first(), L._size); }
+template<typename T>
+List<T>::List(List<T> const& L, int r, int n) { copyNodes(L[r], n); }
+
+
+//删除
+//p75
+template<typename T>T List<T>::remove(ListNodePosi(T) P){//删除合法节点p，返回其数值
+
+	T e = P->data;
+	P->pred->succ = P->succ; P->succ->pred = P->pred;
+	delete P;
+	_size--;
+	return e;
+
+}
+
+
+//析构
+template<typename T>
+List<T>::~List()
+{
+	clear(); delete header; delete trailer;
+}
+
+template<typename T>
+int List<T>::clear() {
+	int oldSize = _size;
+	while (0 < _size)remove(header->succ);//反复删除首节点，直至列表变空
+	return oldSize;
+}
+
+template<typename T>
+int List<T>::deduplicate() {
+	if (_size < 2)return 0;
+	int oldSize = _size;
+	ListNodePosi(T) p = header; Rank r = 0;
+	while(trailer!=(p=p->succ)){//依次直到末节点
+		ListNodePosi(T)q = find(p->data, r, p);//在p的r个（真）前驱中查找雷同者
+		q ? remove(q) : r++;//若的确存在，则删除之；否则秩加一
+	}
+	return oldSize - _size;
+}
+
+
+
+
 
 #endif // !LIST_H
