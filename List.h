@@ -186,9 +186,105 @@ int List<T>::deduplicate() {
 	}
 	return oldSize - _size;
 }
+template<typename T> void List<T>::traverse(void(*visit)(T&)) {
+	for (ListNodePosi(T)p = header->succ; p != trailer; p = p->succ)visit(p->data);
+}
 
 
+//p77
+template<typename T> template<typename VST>
+void List<T>::traverse(VST& visit) {
+	for (ListNodePosi(T)p = header->succ; p != trailer; p = p->succ)visit(p->data);
+}
+
+//有序列表唯一化
+template<typename T>
+int List<T>::uniquify(){//成批剔除元素，效率更高
+	if (_size< 2) return 0;
+	int oldSize = _size;
+	ListNodePosi(T) p = first(); ListNodePosi(T)q;
+	while (trailer != (q = p->succ))//反复考察紧邻的节点对
+		if (p->data != q->data)p = q;//若互异，则转向下一区段
+		else remove(q);//否则（雷同），删除后者
+	return oldSize - _size;//列表规模变化量，即被删除的元素总数
+}
+
+template<typename T>
+ListNodePosi(T) List<T>::search(T const& e, int n, ListNodePosi(T) p)const {
+	//在有序列表内节点p（可能是trailer）的n个（真）前驱中，找到不大于e的最后者
+	while (0 <= n--)//对于p的最近的n个前驱，从右向左逐个  比较
+		if (((p = p->pred)->data) <= e)break;//直至命中，数值越界或范围越界
+	return p;//返回查找终止的位置
+}//失败时，返回区间左边界的前驱（可能是header)--调用者可调用valid（）判断成功与否
+
+//排序器p78
+template<typename T>
+void List<T>::sort(ListNodePosi(T)p,int n){//列表区间排序
+	switch (rand()%3)
+	{
+	case 1:insertionSort(p, n); break;
+	case 2:selectionSort(p, n); break;
+	default:mergeSort(p, n);
+		break;
+	}
+
+}
+template<typename T>
+void List<T>::insertionSort(ListNodePosi(T)p, int n){//valid(p)&& rank(p)+n<=size;
+	for (int r = 0; r < n; r++) {
+		//逐一为各节点
+		insertA(search(p->data, r, p), p->data);//查找适当的位置插入
+		p = p->succ; remove(p->pred);//转向下一节点
+		
+}
+}
+
+template<typename T>
+void List<T>::selectionSort(ListNodePosi(T) p, int n) {
+	ListNodePosi(T) head = p->pred; ListNodePosi(T) tail = p;
+	for (int i = 0; i < n; ++i)tail = tail->succ;//待排序区间为(head,tail)
+	while (1<n)
+	{
+		ListNodePosi(T) max = selectMax(head->succ, n);//找出最大者
+		insertB(tail, remove(max));//将其移动至末尾区间
+		tail = tail->pred; n--;
+
+	}
+}
+template<typename T>
+ListNodePosi(T) List<T>::selectMax(ListNodePosi(T) p, int n) {
+	ListNodePosi(T) max = p;//最大值暂定节点p
+	for (ListNodePosi(T) cur = p; 1 < n; n--)//从首节点出发，将后续节点逐一于max比较
+		if (!lt((cur = cur->succ)->data, max->data))//若当前元素不小于max，则
+			max = cur;//跟新最大元素位置记录
+	return max;
+}
 
 
+//p82归并排序
+template<typename T>
+void List<T>::merge(ListNodePosi(T)& p, int n, List<T>& L, ListNodePosi(T)q, int m)
+{
+	ListNodePosi(T) pp = p->pred;//借助前驱，以便返回前...
+	while(0<m)//在q尚未移出区间之前
+		if((0<n)&&(p->data<=q->data))//若p仍在区间内且v(p)<=v(q),则
+		{
+			if (q == (p = p->succ))break; n--;
+		}
+		else 
+		{
+			insertB(p, L.remove((q = q->succ)->pred)); m--;
+		}
+	p = pp->succ;
+}
 
+template<typename T>
+void List<T>::mergeSort(ListNodePosi(T)& p, int n)
+{
+	if (n < 2)return;//若待排序区间已经足够小....递归基
+	int m = n >> 1;//以中点为界
+	ListNodePosi(T) q = p; for (int i = 0; i < m; ++i)q = q->succ;//均分列表
+	mergeSort(p, m); mergeSort(q, n - m);
+	merge(p, m, *this, q, n - m);
+}
 #endif // !LIST_H
