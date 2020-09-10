@@ -76,8 +76,8 @@ template<typename T>
 void List<T>::init() {
 	header = new ListNode<T>;//创建头哨兵节点
 	trailer = new ListNode<T>;//创建尾哨兵节点
-	header->succ = trailer; header->pred = nullptr;
-	trailer->pred = header; trailer->succ = nullptr;
+	header->succ = trailer; header->pred = nullptr;//头的后继是尾巴，头的前驱是nullptr
+	trailer->pred = header; trailer->succ = nullptr;//尾巴的前驱是头，尾巴的后继是nullptr
 
 	_size = 0;//规模
 }
@@ -118,19 +118,7 @@ template<typename T> ListNodePosi(T) List<T>::insertB(ListNodePosi(T) p, T const
 {
 	_size++; return p->insertAsPred(e);
 }
-template<typename T>
-ListNodePosi(T) ListNode<T>::insertAsPred(T const& e) {
-	ListNodePosi(T) x = new ListNode(e, pred, this);
-	pred->succ = x; pred = x;//设置正向链
-	return x;
-}
-template<typename T>
-ListNodePosi(T) ListNode<T>::insertAsSucc(T const& e)
-{
-	ListNodePosi(T) x = new ListNode(e, this, succ);
-	succ->pred = x; succ = x;//设置逆向链接
-	return x;
-}
+
 
 //p74
 template<typename T>
@@ -213,6 +201,7 @@ template<typename T>
 ListNodePosi(T) List<T>::search(T const& e, int n, ListNodePosi(T) p)const {
 	//在有序列表内节点p（可能是trailer）的n个（真）前驱中，找到不大于e的最后者
 	while (0 <= n--)//对于p的最近的n个前驱，从右向左逐个  比较
+		//这里有小于的意义是当没有此值时，返回适当的插入点而插入后不影响整体序列 
 		if (((p = p->pred)->data) <= e)break;//直至命中，数值越界或范围越界
 	return p;//返回查找终止的位置
 }//失败时，返回区间左边界的前驱（可能是header)--调用者可调用valid（）判断成功与否

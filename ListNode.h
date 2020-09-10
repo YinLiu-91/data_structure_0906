@@ -15,7 +15,20 @@ template<typename T>struct ListNode
 
 };
 
-
+template<typename T>
+ListNodePosi(T) ListNode<T>::insertAsPred(T const& e) {
+	ListNodePosi(T) x = new ListNode(e, pred, this);
+	pred->succ = x; pred = x;//设置正向链
+	return x;
+}
+template<typename T>
+ListNodePosi(T) ListNode<T>::insertAsSucc(T const& e)
+{
+	ListNodePosi(T) x = new ListNode(e, this, succ);//确定了x的前驱与后继即： <-x->
+	succ->pred = x; succ = x;//设置逆向链接,即x前驱的后继，以及后继的前驱即： ->x<-
+	//这样双向链表即告完成
+	return x;
+}
 
 
 

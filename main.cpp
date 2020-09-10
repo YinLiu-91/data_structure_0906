@@ -10,7 +10,28 @@
 #include <ctime>
 #include <iostream>
 #include "List.h"
+#include "Stack.h"
+void convert(Stack<char>& S, __int64 n, int base);
+
+
+
 int main(int argc, char** argv) {
+/*-----------------------------------------------------------------------*/
+	//进制转换例子
+	Stack<char> s1;
+	__int64 num_to_trans = 13;
+	convert(s1, num_to_trans, 2);
+	int i_max = s1.size();
+	for (int i = 0; i < i_max; ++i)
+		std::cout << s1.pop() << "\n";
+
+
+/*-----------------------------------------------------------------------*/
+
+
+	List<int> il;
+	il.insertAsFirst(1);
+
 	std::clock_t t_start, t_end;
 	t_start = std::clock();
 	Vector<int> v(1000000000, 1000000000, 5);
