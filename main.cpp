@@ -11,6 +11,8 @@
 #include <iostream>
 #include "List.h"
 #include "Stack.h"
+#include "Queue.h"
+#include "BinNode.h"
 void convert(Stack<char>& S, __int64 n, int base);
 
 
