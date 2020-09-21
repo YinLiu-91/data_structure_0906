@@ -1,9 +1,9 @@
 #pragma once
-#ifdef BINNODE_H
+#ifndef BINNODE_H
 #define  BINNODE_H
 #define  BinNodePosi(T) BinNode<T>*//节点位置
 #define stature(p) ((p)?(p)->height:-1)//节点高度（与空树高度为-1的约定相统一
-typedef emun{ RB_RED,RB_BLACK }RBColor;//节点颜色
+typedef enum{ RB_RED,RB_BLACK }RBColor;//节点颜色
 
 //binnode 状态与性质判断
 #define IsRoot(x)		(!((x).parent))
@@ -19,10 +19,10 @@ typedef emun{ RB_RED,RB_BLACK }RBColor;//节点颜色
 
 //与binnose具有特定关系的节点及指针
 
-#define sibling(p)/*兄弟*/
+#define sibling(p)/*兄弟*/\
 (IsLChild(*(p))?(p)->parent->rc:(p)->parent->lc)
 
-#define uncle(x)/*叔叔*/
+#define uncle(x)/*叔叔*/\
 (IsLChild(*((x)->parent))?(x)->parent->rc:(x)->parent->parent-lc)
 
 #define  FromParentTo(x)/*来自父亲的引用*/\
@@ -42,7 +42,7 @@ template<typename T> struct BinNode{//二叉树节点模板类
 		data(e), parent(p), lc(lc), rc(rc), height(h), npl(l), clolor(c) {}
 	//操作接口
 	int size();//同届当前节点后代总数，亦即以其为根的子树的规模
-	BinNodePosi(T) insertAsLC(T cont&);//作为当前节点的左孩子插入新节点
+	BinNodePosi(T) insertAsLC(T const&);//作为当前节点的左孩子插入新节点
 	BinNodePosi(T) insertAsRC(T const&);//作为当前节点的右孩子插入新节点
 	BinNodePosi(T)succ();//取当前节点的直接后继
 	template<typename VST>void travLevel(VST&);//子树层次遍历
@@ -81,15 +81,7 @@ void BinNode<T>::travIn(VST& visit){//二叉树中序遍历统一入口
 	}
 }
 
-//子树分离
-template<typename T>//二叉树子树分离算法：将子树x从当前树中摘除，将其封装为一个独立子树返回
-BinTree<T>*BinTree<T>::secede(BinNodePosi(T) x)
-{
-	FromParentTo(*x) = nullptr;//切断来自父亲的指针
-	updateHeightAbove(x->parent);//更新原树中所有祖先的高度
-	BinTree<T>* S = new BinTree<T>; S->_root = x; x->parent = nullptr;//新树以x为根
-	S->_size = x->size(); _size -= S->_size; return S;
-}
+
 
 
 #endif

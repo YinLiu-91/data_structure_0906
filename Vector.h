@@ -271,8 +271,25 @@ struct Increase
 {
 	virtual void operator()(T &e) { e++; }
 };
+
 template <typename T>
 void increase(Vector<T> &V) { V.traverse(Increase<T>()); } //以Increase<T>()为基本操作进行遍历
+//习题2-13
+template<typename T> struct Decrease//函数对象：递减一个T类对象
+{
+	virtual void operator()(T& e) { e--; }
+};
+template<typename T>void decrease(Vector<T>& V) {//统一递减向量中的各元素
+	V.traverse(Decrease<T>());
+}
+//加倍
+template<typename T> struct Double1 {
+	virtual void operator()(T& e) { e *= 2; }
+};
+template<typename T>void Double(Vector<T>& V)
+{
+	V.traverse(Double1<T>());
+}
 
 template <typename T> //p45
 int Vector<T>::disordered() const
@@ -399,26 +416,55 @@ void Vector<T>::sort(Rank lo, Rank hi)
 		break;
 	}
 }
-
+/*-------------------------------------------------------------------------------*/
+//原版
+//template <typename T>
+//void Vector<T>::bubbleSort(Rank lo, Rank hi)
+//{
+//	while (!bubble(lo, hi--))
+//		;
+//} //逐趟扫描交换，直到全序
+//template <typename T>
+//bool Vector<T>::bubble(Rank lo, Rank hi)
+//{
+//	bool sorted = true; //整体有序标志
+//	while (++lo < hi)	//自左向右，逐一检查各对相邻元素
+//		if (_elem[lo - 1] > _elem[lo])
+//		{					//若逆序，则
+//			sorted = false; //意味着尚未整体有序，需要
+//			swap(_elem[lo - 1], _elem[lo]);
+//		}
+//	return sorted;
+//}
+/*-------------------------------------------------------------------------------*/
+//改进版
 template <typename T>
 void Vector<T>::bubbleSort(Rank lo, Rank hi)
 {
-	while (!bubble(lo, hi--))
-		;
+	while (lo < (hi = bubble(lo, hi)));
+	
 } //逐趟扫描交换，直到全序
 template <typename T>
 bool Vector<T>::bubble(Rank lo, Rank hi)
 {
-	bool sorted = true; //整体有序标志
-	while (++lo < hi)	//自左向右，逐一检查各对相邻元素
-		if (_elem[lo - 1] > _elem[lo])
-		{					//若逆序，则
-			sorted = false; //意味着尚未整体有序，需要
-			swap(_elem[lo - 1], _elem[lo]);
-		}
-	return sorted;
-}
+	//bool sorted = true; //整体有序标志
+	//while (++lo < hi)	//自左向右，逐一检查各对相邻元素
+	//	if (_elem[lo - 1] > _elem[lo])
+	//	{					//若逆序，则
+	//		sorted = false; //意味着尚未整体有序，需要
+	//		swap(_elem[lo - 1], _elem[lo]);
+	//	}
+	//return sorted;
 
+	Rank last = lo;//最后侧的逆序对初始化为[lo-1,lo];
+	while(++lo<hi)//自左至右，逐一检查各对相邻元素
+		if(_elem[lo-1]>_elem[lo]){//若逆序，则
+			last = lo;//更新最右侧逆序对位置记录，并
+			swap(_elem[lo - 1], _elem[lo]);//通过交换使局部有序
+		}
+	return last;
+}
+ 
 template <typename T> //向量归并排序
 void Vector<T>::mergeSort(Rank lo, Rank hi)
 {

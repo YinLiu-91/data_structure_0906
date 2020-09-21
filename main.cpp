@@ -13,6 +13,7 @@
 #include "Stack.h"
 #include "Queue.h"
 #include "BinNode.h"
+#include "BST.h"
 void convert(Stack<char>& S, __int64 n, int base);
 
 

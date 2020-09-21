@@ -276,4 +276,25 @@ void List<T>::mergeSort(ListNodePosi(T)& p, int n)
 	mergeSort(p, m); mergeSort(q, n - m);
 	merge(p, m, *this, q, n - m);
 }
+
+////3-5¼Ó1
+//template<typename T> struct Increase1 {
+//	void operator()(T&e)
+//	{
+//		e++;
+//	}
+//};
+//template<typename T> void Increase(List<T>& L) {
+//	L.traverse(Increase1());
+//}
+//template<typename T>struct Half {
+//	void operator()(T& e)
+//	{
+//		e /= 2;
+//	}
+//};
+//template<typename T> void half(List<T>& L)
+//{
+//	L.traverse(Half());
+//}
 #endif // !LIST_H

@@ -1,5 +1,5 @@
 #pragma once
-#ifdef BINTREE_H
+#ifndef BINTREE_H
 #define BINTREE_H
 #include "BinNode.h"
 #include "Stack.h"
@@ -103,11 +103,11 @@ void travPost_R(BinNodePosi(T)x, VST& visit) {
 
 //中序遍历
 template<typename T, typename VST>
-void travPost_R(BinNodePosi(T)x, VST& visit) {
+void travIn_R(BinNodePosi(T)x, VST& visit) {
 	if (!x)return;
-	travPost_R(x->lc, visit);
+	travIn_R(x->lc, visit);
 	visit(x->data);
-	travPost_R(x->rc, visit);
+	travIn_R(x->rc, visit);
 }
 
 //p127//迭代版先序遍历方法
@@ -181,9 +181,10 @@ void travIn_I2(BinNodePosi(T)x, VST& visit) {
 			visit(x->data);
 			x = x->rc;//遍历祖先的右子树
 		}
+		else
+			break;
 	}
-else
-break;
+
 }
 
 
@@ -234,7 +235,7 @@ void travPost_I(BinNodePosi(T)x,VST&visit){//二叉树的后序遍历
 //p134层次遍历
 #include "Queue.h"
 template<typename T>template<typename VST>//元素类型，操作器
-void BinNode<T>travLevel(VST& visit){//二叉树层次遍历
+void BinNode<T>::travLevel(VST& visit){//二叉树层次遍历
 	Queue<BinNodePosi(T)>Q;//辅助队列
 	Q.enqueue(this);//根节点入队
 	while(!Q.empty()){//在队列再次变空前，反复迭代
@@ -244,7 +245,15 @@ void BinNode<T>travLevel(VST& visit){//二叉树层次遍历
 	}
 }
 
-
+//子树分离
+template<typename T>//二叉树子树分离算法：将子树x从当前树中摘除，将其封装为一个独立子树返回
+BinTree<T>* BinTree<T>::secede(BinNodePosi(T) x)
+{
+	FromParentTo(*x) = nullptr;//切断来自父亲的指针
+	updateHeightAbove(x->parent);//更新原树中所有祖先的高度
+	BinTree<T>* S = new BinTree<T>; S->_root = x; x->parent = nullptr;//新树以x为根
+	S->_size = x->size(); _size -= S->_size; return S;
+}
 
 
 
