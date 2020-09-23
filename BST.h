@@ -45,6 +45,7 @@ template<typename T> bool BST<T>::remove(const T& e) {
 	updateHeightAbove(_hot);//更新_hot及其历代祖先的高度
 	return true;
 }
+//p190
 template<typename T>static BinNodePosi(T) removeAt(BinNodePosi(T)& x, BinNodePosi(T)& hot) {
 	BinNodePosi(T) w = x;//实施被摘除的节点,初值同x
 	BinNodePosi(T) succ = nullptr;//实际被删除节点的接替者
