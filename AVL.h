@@ -24,23 +24,24 @@ IsLChild(*(x))?(x)->lc:(x)->rc/*等高：与父亲x同侧者(zIg-zig或则zag-zag*/\
 )\
 )\
 )
-template<typename T> BinNodePosi(T) AVL<T>::insert(const T& e) {//将关键码e插入AVL树中
-	BinNodePosi(T)& x = search(e); if (x)return x;//确认目标节点存在
-	BinNodePosi(T)xx = x = new BinNode<T>(e, this->_hot); this->_size++;//创建新节点
-//此时，x的父亲_hot若增高，则其祖父有可能失衡
-	for (BinNodePosi(T)g = this->_hot; g; g = g->parent) {//从x之父出发向上，逐层检查各代祖先g
-		if (!AvlBalanced(*g)) {//一旦发现g失衡，则采用（3+4）算法使之平衡，并将子树
-			FromParentTo(*g) = rotateAt(tallerChild(tallerChild(g)));//重新接入原树
-			//auto dddd = rotateAt(tallerChild(tallerChild(g)));//重新接入原树
-			//FromParentTo(*g) = ddd;
-			break;
-		}
-		else
-			updateHeight(g);//更新其高度（注意：几遍g失衡，高度亦可能增加）
-	}//至多只需一次调整；若果真做过调整，则全树高度必然复原
-	return xx;//返回新节点位置
 
-}//无论e是否存在于原树中，总有AVL::insert(e)->data==e
+//template<typename T> BinNodePosi(T) AVL<T>::insert(const T& e) {//将关键码e插入AVL树中
+//	BinNodePosi(T)& x = search(e); if (x)return x;//确认目标节点存在
+//	BinNodePosi(T)xx = x = new BinNode<T>(e, this->_hot); this->_size++;//创建新节点
+////此时，x的父亲_hot若增高，则其祖父有可能失衡
+//	for (BinNodePosi(T)g = this->_hot; g; g = g->parent) {//从x之父出发向上，逐层检查各代祖先g
+//		if (!AvlBalanced(*g)) {//一旦发现g失衡，则采用（3+4）算法使之平衡，并将子树
+//			FromParentTo(*g) = rotateAt(tallerChild(tallerChild(g)));//重新接入原树
+//			//auto dddd = rotateAt(tallerChild(tallerChild(g)));//重新接入原树
+//			//FromParentTo(*g) = ddd;
+//			break;
+//		}
+//		else
+//			updateHeight(g);//更新其高度（注意：几遍g失衡，高度亦可能增加）
+//	}//至多只需一次调整；若果真做过调整，则全树高度必然复原
+//	return xx;//返回新节点位置
+//
+//}//无论e是否存在于原树中，总有AVL::insert(e)->data==e
 
 //p200 3+4重构
 /*----------------------------------------------------------------------------------
@@ -66,7 +67,7 @@ template<typename T> BinNodePosi(T) BST<T>::connect34(BinNodePosi(T) a, BinNodeP
 template<typename T>BinNodePosi(T)BST<T>::rotateAt(BinNodePosi(T)v) {
 	//v为非空孙辈节点
 	BinNodePosi(T) p = v->parent; BinNodePosi(T)g = p->parent;//视v，p和g相对位置分四种情况
-	if (IsLChild(*p))){/*zig*///应当判断为IsRChild??
+	if (IsLChild(*p)){/*zig*///应当判断为IsRChild??
 	if (IsLChild(*v)) {/*zig-zig*/
 		p->parent = g->parent;//向上链接，p上去
 		return connect34(v, p, g, v->lc, v->rc, p->rc, p->rc);

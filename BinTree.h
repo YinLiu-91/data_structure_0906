@@ -40,7 +40,7 @@ template<typename T>int BinTree<T>::updateHeight(BinNodePosi(T) x)//¸üĞÂ½ÚµãxµÄ¸
 }
 template<typename T> void BinTree<T>::updateHeightAbove(BinNodePosi(T) x)//¸üĞÂ¸ß¶È
 {
-	while (x) { updateHeight(x); x = x->height; }
+	while (x) { BinTree<T>::updateHeight(x); x = x->parent; }
 }
 template<typename T> BinNodePosi(T) BinTree<T>::insertAdRoot(T const& e)
 {
@@ -74,7 +74,7 @@ template<typename T>//É¾³ı¶ş²æÊ÷ÖĞÎ»ÖÃx´¦µÄ½Úµã¼°Æäºó´ú£¬·µ»Ø±»É¾³ı½ÚµãµÄÊıÖµ
 int BinTree<T>::remove(BinNodePosi(T)x) {//
 	FromParentTo(*x) = nullptr;//ÇĞ¶ÏÀ´×Ô¸¸½ÚµãµÄÖ¸Õë
 	updateHeightAbove(x->parent);//¸üĞÂ×æÏÈ¸ß¶È
-	int n = removeAt(x); _size - n = n; return n;
+	int n = removeAt(x); _size -= n; return n;
 }
 template<typename T>//É¾³ı¶ş²æÊ÷ÖĞÎ»ÖÃx´¦µÄ½Úµã¼°Æäºó´ú£¬·µ»Ø±»É¾³ı½ÚµãµÄÊıÖµ
 static int removeAt(BinNodePosi(T)x) {

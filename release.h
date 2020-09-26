@@ -23,7 +23,7 @@ template <typename T> struct Cleaner {
       static int n = 0;
       if ( 7 > strlen ( typeid ( T ).name() ) ) { //复杂类型一概忽略，只输出基本类型
          printf ( "\t<%s>[%d]=", typeid ( T ).name(), ++n );
-         print ( x );
+         //print ( x );
          printf ( " purged\n" );
       }
 #endif

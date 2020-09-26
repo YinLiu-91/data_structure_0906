@@ -14,6 +14,7 @@ protected:
 		BinNodePosi(T), BinNodePosi(T), BinNodePosi(T), BinNodePosi(T));
 	BinNodePosi(T)rotateAt(BinNodePosi(T) x);//对x及其父亲，祖父做统一旋转
 public:
+	using BinTree<T>::_root;
 	//基本接口：以virtual修饰，强制要求所有派生类（BST变种）根据各自的规则对其重写
 	virtual BinNodePosi(T)& search(const T& e);//查找
 	virtual BinNodePosi(T) insert(const T& e);//插入
@@ -35,14 +36,14 @@ template<typename T> BinNodePosi(T) BST<T>::insert(const T& e) {
 	BinNodePosi(T)& x = search(e); if (x)return  x;//确认目标不存在
 	x = new BinNode<T>(e, _hot);//创建新节点：以e为关键码，以_hot为父
 	this->_size;//更新全树规模
-	updateHeightAbove(x);//更新x及其历代祖先高度
+	BinTree<T>::updateHeightAbove(x);//更新x及其历代祖先高度
 	return x;
 }
 template<typename T> bool BST<T>::remove(const T& e) {
 	//从BST树中删除关键码e
 	BinNodePosi(T)& x = search(e); if (!x)return false;//确认目标存在
 	removeAt(x, _hot); this->_size--;//实施删除
-	updateHeightAbove(_hot);//更新_hot及其历代祖先的高度
+	BinTree<T>::updateHeightAbove(_hot);//更新_hot及其历代祖先的高度
 	return true;
 }
 //p190
@@ -55,7 +56,7 @@ template<typename T>static BinNodePosi(T) removeAt(BinNodePosi(T)& x, BinNodePos
 		succ = x = x->lc;//对称的处理，注意：此时succ!=null;
 	else {//若左右子树均存在，则选择x的直接后继作为实际被摘除节点，为此需要
 		w = w->succ();//（在右子树中）找到*x的直接后继*w
-		swap(x->data, w->data);//交换*x和*w的数据元素
+		std::swap(x->data, w->data);//交换*x和*w的数据元素
 		BinNodePosi(T) u = w->parent;
 		((u == x) ? u->rc : u->lc) = succ = w->rc;//隔离节点*w
 	}

@@ -15,11 +15,13 @@
 #include "BinNode.h"
 #include "BST.h"
 #include "AVL.h"
+#include "Splay.h"
 void convert(Stack<char>& S, __int64 n, int base);
 
 
 
 int main(int argc, char** argv) {
+	Splay<int> sp1;
 /*-----------------------------------------------------------------------*/
 	//进制转换例子
 	Stack<char> s1;
