@@ -16,6 +16,7 @@
 #include "BST.h"
 #include "AVL.h"
 #include "Splay.h"
+#include "RedBlack.h"
 void convert(Stack<char>& S, __int64 n, int base);
 
 
